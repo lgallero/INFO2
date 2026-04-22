@@ -35,3 +35,5 @@ int main (int argc, char *argv[]){
     printf("Numero valido y positivo: %d\n", valor);
     return 0;
 }
+// Para guardar salida stdout: 
+// "./ejercicio02 [argumento] > [nombre].txt"
