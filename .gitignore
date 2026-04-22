@@ -1,0 +1,24 @@
+# Archivos compilados
+*.o
+*.obj
+*.exe
+*.out
+
+# Directorios de build
+build/
+cmake-build-*/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# ignorar cualquier ejecutable en todo el repo
+*
+!*/
+!*.*
