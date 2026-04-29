@@ -1,100 +1,41 @@
-# Ejercicios propuestos - Archivos en C
+# Ejercicios propuestos
 
-Este repositorio contiene la resolución de ejercicios prácticos de manejo de archivos en lenguaje C.
+1. Realizar un programa para copiar un archivo de texto en otro.
 
-## Ejercicio 1
+2. Realizar un programa que maneje un archivo de longitud desconocida, donde cada registro contiene el nombre de un alumno y cuatro notas. Hacerlo con un menú que permita crear el archivo, calcular el promedio, mostrarlo, buscar un registro determinado, modificar una nota, agregar registros y ordenarlo en el archivo alfabéticamente. Realizar también el programa que genere el archivo y verificar que funcionen en conjunto.
 
-Realizar un programa para copiar un archivo de texto en otro.
+3. Se tiene un archivo `lista.dat`, que contiene la Base de Datos de artículos de un negocio:
 
-### Objetivo
+   - Número de artículo (`int`),
+   - Descripción (`string` de 30 caracteres),
+   - precio (`float`),
+   - proveedor (`string` de 30)
+   - stock(`int`).
 
-El programa debe abrir un archivo de texto existente, leer su contenido y copiarlo en un nuevo archivo de salida.
+   Actualizar esta Base de Datos aplicando un 20% de aumento a todos los artículos del proveedor Pérez.
 
-### Conceptos utilizados
-
-- Apertura de archivos de texto.
-- Lectura de caracteres o líneas.
-- Escritura en otro archivo.
-- Manejo de errores al abrir archivos.
-- Cierre correcto de archivos.
+   Realizar también el programa que genere la base de datos y verificar que funcionen en conjunto.
 
 ---
 
-## Ejercicio 2
+# Ejercicios propuestos
 
-Realizar un programa que maneje un archivo de longitud desconocida, donde cada registro contiene:
+4. Escribir un programa que abra un archivo PNG en modo binario y muestre por pantalla:
 
-- Nombre de un alumno.
-- Cuatro notas.
+   A. Si el archivo es realmente un PNG válido (verificando los primeros 8 bytes: `89 50 4E 47 0D 0A 1A 0A`).
 
-El programa debe hacerse con un menú que permita:
+   B. El ancho y alto de la imagen en píxeles.
 
-- Crear el archivo.
-- Calcular el promedio.
-- Mostrar los registros.
-- Buscar un registro determinado.
-- Modificar una nota.
-- Agregar registros.
-- Ordenar el archivo alfabéticamente.
+Datos del formato:
 
-También se debe realizar un programa que genere el archivo y permita verificar que funcione en conjunto.
+- Los primeros 8 bytes son la firma PNG.
 
-### Objetivo
+- A continuación viene un chunk llamado IHDR. Su estructura comienza así:
 
-Administrar una base de datos simple de alumnos utilizando archivos, permitiendo cargar, consultar, modificar y ordenar registros.
+  - 4 bytes: tamaño del chunk (`uint32_t`, big-endian) — ignorarlo.
+  - 4 bytes: tipo del chunk (los caracteres ASCII `"IHDR"`) — ignorarlos.
+  - 4 bytes: ancho (`uint32_t`, big-endian).
+  - 4 bytes: alto (`uint32_t`, big-endian).
+  - Los `uint32_t` están en big-endian (network byte order). Como las PCs son little-endian, hay que invertir el orden de los bytes al leer.
 
-### Conceptos utilizados
-
-- Archivos de registros.
-- Estructuras `struct`.
-- Lectura y escritura de datos.
-- Menú interactivo.
-- Búsqueda de registros.
-- Modificación de registros.
-- Ordenamiento alfabético.
-- Manejo de archivos de longitud variable o desconocida.
-
----
-
-## Ejercicio 3
-
-Se tiene un archivo `lista.dat` que contiene la base de datos de artículos de un negocio.
-
-Cada artículo contiene los siguientes datos:
-
-- Número de artículo: `int`
-- Descripción: `string` de 30 caracteres
-- Precio: `float`
-- Proveedor: `string` de 30 caracteres
-- Stock: `int`
-
-Se debe actualizar esta base de datos aplicando un aumento del 20% a todos los artículos del proveedor Pérez.
-
-También se debe realizar un programa que genere la base de datos y permita verificar que funcione en conjunto.
-
-### Objetivo
-
-Modificar registros dentro de un archivo binario, aplicando una actualización de precio según el proveedor del artículo.
-
-### Conceptos utilizados
-
-- Archivos binarios.
-- Estructuras `struct`.
-- Lectura y escritura de registros.
-- Actualización de datos dentro de un archivo.
-- Comparación de cadenas.
-- Uso de `fread`, `fwrite`, `fseek` y `rewind`.
-
----
-
-## Ejercicio 4
-
-Escribir un programa que abra un archivo PNG en modo binario y muestre por pantalla:
-
-1. Si el archivo es realmente un PNG válido.
-2. El ancho y alto de la imagen en píxeles.
-
-Para verificar si el archivo es un PNG válido se deben comprobar los primeros 8 bytes:
-
-```text
-89 50 4E 47 0D 0A 1A 0A
+Probar el programa con varios PNG de ancho y alto conocido. Verificar el resultado abriendo la imagen en cualquier visor.
