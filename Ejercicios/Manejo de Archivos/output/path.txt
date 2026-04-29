@@ -1,0 +1,10 @@
+/home/lucas/.vscode/extensions/vadimcn.vscode-lldb-1.12.1/bin
+/usr/local/sbin
+/usr/local/bin
+/usr/sbin
+/usr/bin
+/sbin
+/bin
+/usr/games
+/usr/local/games
+/snap/bin
