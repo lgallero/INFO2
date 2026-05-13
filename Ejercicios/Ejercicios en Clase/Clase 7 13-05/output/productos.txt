@@ -1,0 +1,11 @@
+|CODIGO|DESCRIPCION                                       |    PRECIO|
+|     1|Papa                                              |     24.20|
+|     2|zapatp                                            |     14.64|
+|     3|pera                                              |     88.58|
+|     4|mouse                                             |    146.41|
+|     5|teclado                                           |    106.29|
+|     6|celu                                              |    155.90|
+|     7|lapiz                                             |      3.54|
+|     8|destornillador                                    |     77.95|
+|     9|espatula                                          |    186.01|
+|    10|pc                                                |     14.64|
