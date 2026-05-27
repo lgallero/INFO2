@@ -13,6 +13,9 @@ cmake-build-*/
 .idea/
 *.swp
 *.swo
+**/.vscode/
+**/gcc.log
+**/output/
 
 # OS
 Thumbs.db
