@@ -10,18 +10,19 @@ cmake-build-*/
 
 # IDEs
 .vscode/
+**/.vscode/
 .idea/
 *.swp
 *.swo
-**/.vscode/
+
+# Logs
+gcc.log
 **/gcc.log
+
+# Carpetas output
+output/
 **/output/
 
 # OS
 Thumbs.db
 .DS_Store
-
-# ignorar cualquier ejecutable en todo el repo
-*
-!*/
-!*.*
