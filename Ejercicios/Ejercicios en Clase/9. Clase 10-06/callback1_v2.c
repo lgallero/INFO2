@@ -42,7 +42,9 @@ int distancia(int a, int b)
 {
     int i = a - b;
     return (i >=0 ) ? i : -i;
+    //return abs(i);
 }
+
 
 int aplicar (int (*cmp) (int, int), int x, int y)
 {
