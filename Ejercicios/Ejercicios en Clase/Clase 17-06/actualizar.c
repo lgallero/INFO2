@@ -67,13 +67,22 @@ int main()
 
 FILE * fb(int codigo, FILE *fp){
     Productos P;
-    while(fread(&P,sizeof(Productos),1,fp)==1)
+    int flag = 0;
+    while(flag == 0 && fread(&P,sizeof(Productos),1,fp)==1 )
     {
         if(P.codigo == codigo)
         {
             fseek(fp, -sizeof(Productos) , SEEK_CUR);
-            return fp;
+            flag = 1;
         }
     }
-    return NULL;
+    if (flag)
+    {
+        return fp;
+    }
+    else
+    {
+        return NULL;
+    }
+        
 }
