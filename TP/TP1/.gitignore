@@ -1,0 +1,20 @@
+# Objetos y ejecutables (NO se versionan)
+*.o
+*.obj
+/tp1
+*.exe
+
+# Datos del TP: se bajan del campus virtual, no se versionan.
+# (versionamos codigo, los datos van afuera)
+/data/*
+!/data/.gitkeep
+
+# Basura de editores/SO
+*.swp
+.DS_Store
+
+# Temporales de Syncthing (se cuelan al compilar en una carpeta sincronizada)
+~syncthing~*
+*.tmp
+.stfolder/
+.stversions/
