@@ -55,4 +55,34 @@ struct rating {
     int   timeStamp;
 };
 
+// Estructura para PUNTO 3 
+struct usuarioGeneros {
+    int idUser;
+    int cantidadGeneros[CANT_GENEROS];
+};
+
+// ==================== FUNCIONES GENERALES ====================
+
+struct movie *leerPeliculas(const char *nombreArchivo, int *cantidad);
+
+int buscarPeliculaPorId (struct movie peliculas[], int cantPeliculas, int idMovie);
+
+int perteneceAGenero (struct movie pelicula, int indiceGenero);
+
+const char *obtenerNombreGenero(int indiceGenero);
+
+int parsearLineaMovieCsv(char linea[], struct movie *pelicula);
+
+void limpiarGeneros(genero *g);
+
+void cargarGeneroDesdeTexto (genero *g, const char *textoGenero);
+
+int buscarUsuarioPorId (struct usuarioGeneros usuarios[], int cantUsuarios, int idUser);
+
+// ==================== FUNCIONES DE LOS PUNTOS ====================
+void Punto1 (struct movie peliculas[], int cantPeliculas,const char *archivoRatings);
+
+void Punto2 (const char *archivoMoviesOriginal, const char *archivoMoviesCsv, const char *archivoMoviesFinal);
+
+void Punto3 (struct movie peliculas[], int cantPeliculas, const char *archivoRatings);
 #endif /* TP1_H */
