@@ -21,7 +21,7 @@ void Punto1 (struct movie peliculas[], int cantPeliculas, const char *archivoRat
 
     while (fread(&ratingActual, sizeof(struct rating), 1, FP) == 1) {
 
-        posPelicula = buscarPeliculaPorId (peliculas, cantPeliculas, ratingActual.idMovie);
+        posPelicula = buscarPeliculaPorId (peliculas, cantPeliculas, ratingActual.idMovie); // Pos de la pelicula segun el id 
 
         if (posPelicula != -1) 
         {

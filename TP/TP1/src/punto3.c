@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "tp1.h"
 
+static int buscarUsuarioPorId( struct usuarioGeneros usuarios[], int cantUsuarios, int idUser);
+
 void Punto3 (struct movie peliculas[], int cantPeliculas, const char *archivoRatings)
 {
     FILE *FP;
@@ -11,8 +13,7 @@ void Punto3 (struct movie peliculas[], int cantPeliculas, const char *archivoRat
     int cantUsuarios = 0;
     int posUsuario;
     int posPelicula;
-    int i;
-    int j;
+    int i, j;
     int generoFavorito;
     int maxCantidad;
 
@@ -34,7 +35,7 @@ void Punto3 (struct movie peliculas[], int cantPeliculas, const char *archivoRat
                 printf("No se pudo reservar memoria para usuarios\n");
                 free(usuarios);
                 fclose(FP);
-                return; // CONSULTAR
+                exit(0); 
             }
 
             usuarios = aux; 
@@ -53,7 +54,7 @@ void Punto3 (struct movie peliculas[], int cantPeliculas, const char *archivoRat
 
         if (posPelicula != -1) {  // si existe la pelicula 
             for (i = 0; i < CANT_GENEROS; i++) { // Recorro los generos
-                if (perteneceAGenero(peliculas[posPelicula], i)) {
+                if (perteneceAGenero(peliculas[posPelicula], i)) { // Si existe el genero, es decir, vale 1
                     usuarios[posUsuario].cantidadGeneros[i]++; // Suma cada pelicula que tengo el genero que corresponde
                 }
             }
@@ -62,11 +63,14 @@ void Punto3 (struct movie peliculas[], int cantPeliculas, const char *archivoRat
 
     fclose(FP);
 
+
+    // Muestro en pantalla los Usuarios con su genero favorito
     printf("%-12s %-20s %-15s\n", "Usuario", "Genero favorito", "Cantidad");
     printf("------------------------------------------------\n");
 
     for (i = 0; i < cantUsuarios; i++) { // Recorro cada usuario
 
+        // Tomo como favorito el primer genero
         generoFavorito = 0; // posicion del genero favorito dentro del usuario
         maxCantidad = usuarios[i].cantidadGeneros[0]; // cantidad maxima de reseñas 
 
@@ -83,7 +87,7 @@ void Punto3 (struct movie peliculas[], int cantPeliculas, const char *archivoRat
     free(usuarios);
 }
 
-int buscarUsuarioPorId( struct usuarioGeneros usuarios[], int cantUsuarios, int idUser)
+static int buscarUsuarioPorId( struct usuarioGeneros usuarios[], int cantUsuarios, int idUser)
 {
     int i = 0, flag = 0;
     while (!flag && i < cantUsuarios )

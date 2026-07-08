@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "tp1.h"
 
+// FUNCIONES PARA VARIOS PUNTOS
+
 // Leer el contenido de archivo y generar un vector dinamico
 struct movie *leerPeliculas(const char *nombreArchivo, int *cantidad)
 {
@@ -41,6 +43,7 @@ struct movie *leerPeliculas(const char *nombreArchivo, int *cantidad)
     return peliculas;
 }
 
+// Devolver la pos de la pelicula en el movie.dat por el id de rating.dat 
 int buscarPeliculaPorId(struct movie peliculas[], int cantPeliculas, int idMovie)
 {
     int i = 0,flag=0;

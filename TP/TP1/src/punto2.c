@@ -1,15 +1,17 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include "tp1.h"
 
-void Punto2 (const char *archivoMoviesOriginal, const char *archivoMoviesCsv, const char *archivoMoviesFinal)
+static int leerMovieCsv(FILE *fpCsv, struct movie *pelicula);
+static void asignarGenero(genero *g, const char *nombreGenero);
+
+void Punto2(const char *archivoMoviesOriginal, const char *archivoMoviesCsv, const char *archivoMoviesFinal)
 {
     FILE *fpOriginal;
     FILE *fpCsv;
     FILE *fpFinal;
+
     struct movie pelicula;
-    char linea[500];
     int peliculasAgregadas = 0;
 
     fpOriginal = fopen(archivoMoviesOriginal, "rb");
@@ -25,6 +27,7 @@ void Punto2 (const char *archivoMoviesOriginal, const char *archivoMoviesCsv, co
         return;
     }
 
+    // Copia del Original
     while (fread(&pelicula, sizeof(struct movie), 1, fpOriginal) == 1) {
         fwrite(&pelicula, sizeof(struct movie), 1, fpFinal);
     }
@@ -38,91 +41,58 @@ void Punto2 (const char *archivoMoviesOriginal, const char *archivoMoviesCsv, co
         return;
     }
 
-    // ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
-    while (fgets(linea, sizeof(linea), fpCsv) != NULL) {
-        if (parsearLineaMovieCsv(linea, &pelicula)) {
-            fwrite(&pelicula, sizeof(struct movie), 1, fpFinal);
-            peliculasAgregadas++;
-        }
+    // Parsear y copiar el .csv
+    while (leerMovieCsv(fpCsv, &pelicula)) {
+        fwrite(&pelicula, sizeof(struct movie), 1, fpFinal);
+        peliculasAgregadas++;
     }
-    // ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+
     fclose(fpCsv);
     fclose(fpFinal);
 
     printf("Peliculas agregadas desde movies2.csv: %d\n", peliculasAgregadas);
     printf("Se creo el archivo %s\n\n", archivoMoviesFinal);
 }
-// ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
-int parsearLineaMovieCsv(char linea[], struct movie *pelicula)
+
+// Devuelve 1 si se completo , 0 si hubo algun error 
+static int leerMovieCsv(FILE *fpCsv, struct movie *pelicula)
 {
-    char *ptr;
-    char *finId;
     char generosTexto[250];
-    int i = 0;
+    int caracter;
 
-    linea[strcspn(linea, "\n")] = '\0';
-
-    ptr = linea;
-
-    pelicula->id = (int)strtol(ptr, &finId, 10);
-
-    if (ptr == finId) {
+    if (fscanf(fpCsv, " %d,", &pelicula->id) != 1) { // ID :  id, 
         return 0;
     }
 
-    if (*finId != ',') {
+    memset(pelicula->nombre, 0, MAX_NOMBRE); // Limpio el nombre 
+
+    limpiarGeneros(&pelicula->sGenero);      // Limpio todos los generos 
+
+
+    caracter = fgetc(fpCsv);
+   
+    if (caracter == '"') {
+        if (fscanf(fpCsv, " %199[^\"]\"", pelicula->nombre) != 1) {  // Viene con comillas 
+            return 0;
+        }
+    } else { 
+        fseek(fpCsv, -1, SEEK_CUR);
+
+        if (fscanf(fpCsv, " %199[^,]", pelicula->nombre) != 1) {     // No viene con comillas 
+            return 0;
+        }
+    }
+
+    if (fscanf(fpCsv, ", %249[^\n]", generosTexto) != 1) { // leo todos los generos hasta el fin de la linea
         return 0;
     }
-
-    ptr = finId + 1;
-
-    memset(pelicula->nombre, 0, MAX_NOMBRE);
-    limpiarGeneros(&pelicula->sGenero);
-
-    if (*ptr == '"') {
-        ptr++;
-
-        while (*ptr != '\0' && !(*ptr == '"' && *(ptr + 1) == ',')) {
-            if (i < MAX_NOMBRE - 1) {
-                pelicula->nombre[i] = *ptr;
-                i++;
-            }
-            ptr++;
-        }
-
-        pelicula->nombre[i] = '\0';
-
-        if (*ptr == '"') {
-            ptr++;
-        }
-
-        if (*ptr == ',') {
-            ptr++;
-        }
-    } else {
-        while (*ptr != '\0' && *ptr != ',') {
-            if (i < MAX_NOMBRE - 1) {
-                pelicula->nombre[i] = *ptr;
-                i++;
-            }
-            ptr++;
-        }
-
-        pelicula->nombre[i] = '\0';
-
-        if (*ptr == ',') {
-            ptr++;
-        }
-    }
-
-    strncpy(generosTexto, ptr, sizeof(generosTexto) - 1);
-    generosTexto[sizeof(generosTexto) - 1] = '\0';
 
     cargarGeneroDesdeTexto(&pelicula->sGenero, generosTexto);
 
     return 1;
 }
-// ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+
+// Pone en 0 todos los generos
 void limpiarGeneros(genero *g)
 {
     g->Action = 0;
@@ -146,81 +116,63 @@ void limpiarGeneros(genero *g)
     g->FilmNoir = 0;
 }
 
+// Parsea los generos
 void cargarGeneroDesdeTexto(genero *g, const char *textoGenero)
 {
-    if (strstr(textoGenero, "Action") != NULL) {
+    char copia[250];
+    char *token;     
+
+    strncpy(copia, textoGenero, sizeof(copia) - 1); // Hago una copia
+    copia[sizeof(copia) - 1] = '\0';                // Caracter nulo en el final para asegurar el final
+
+    token = strtok(copia, "|"); // Copio hasta |
+
+    while (token != NULL) {
+        asignarGenero(g, token);  
+        token = strtok(NULL, "|");
+    }
+}
+
+// Pone en 1 el genero leido por texto
+static void asignarGenero(genero *g, const char *nombreGenero)
+{
+    if (strcmp(nombreGenero, "Action") == 0) {
         g->Action = 1;
-    }
-
-    if (strstr(textoGenero, "Adventure") != NULL) {
+    } else if (strcmp(nombreGenero, "Adventure") == 0) {
         g->Adventure = 1;
-    }
-
-    if (strstr(textoGenero, "Animation") != NULL) {
+    } else if (strcmp(nombreGenero, "Animation") == 0) {
         g->Animation = 1;
-    }
-
-    if (strstr(textoGenero, "Children") != NULL) {
+    } else if (strcmp(nombreGenero, "Children") == 0) {
         g->Children = 1;
-    }
-
-    if (strstr(textoGenero, "Comedy") != NULL) {
+    } else if (strcmp(nombreGenero, "Comedy") == 0) {
         g->Comedy = 1;
-    }
-
-    if (strstr(textoGenero, "Crime") != NULL) {
+    } else if (strcmp(nombreGenero, "Crime") == 0) {
         g->Crime = 1;
-    }
-
-    if (strstr(textoGenero, "Drama") != NULL) {
+    } else if (strcmp(nombreGenero, "Drama") == 0) {
         g->Drama = 1;
-    }
-
-    if (strstr(textoGenero, "Fantasy") != NULL) {
+    } else if (strcmp(nombreGenero, "Fantasy") == 0) {
         g->Fantasy = 1;
-    }
-
-    if (strstr(textoGenero, "Horror") != NULL) {
+    } else if (strcmp(nombreGenero, "Horror") == 0) {
         g->Horror = 1;
-    }
-
-    if (strstr(textoGenero, "IMAX") != NULL) {
+    } else if (strcmp(nombreGenero, "IMAX") == 0) {
         g->IMAX = 1;
-    }
-
-    if (strstr(textoGenero, "Musical") != NULL) {
+    } else if (strcmp(nombreGenero, "Musical") == 0) {
         g->Musical = 1;
-    }
-
-    if (strstr(textoGenero, "Mystery") != NULL) {
+    } else if (strcmp(nombreGenero, "Mystery") == 0) {
         g->Mystery = 1;
-    }
-
-    if (strstr(textoGenero, "Romance") != NULL) {
+    } else if (strcmp(nombreGenero, "Romance") == 0) {
         g->Romance = 1;
-    }
-
-    if (strstr(textoGenero, "Sci-Fi") != NULL) {
+    } else if (strcmp(nombreGenero, "Sci-Fi") == 0) {
         g->SciFi = 1;
-    }
-
-    if (strstr(textoGenero, "Thriller") != NULL) {
+    } else if (strcmp(nombreGenero, "Thriller") == 0) {
         g->Thriller = 1;
-    }
-
-    if (strstr(textoGenero, "War") != NULL) {
+    } else if (strcmp(nombreGenero, "War") == 0) {
         g->War = 1;
-    }
-
-    if (strstr(textoGenero, "Western") != NULL) {
+    } else if (strcmp(nombreGenero, "Western") == 0) {
         g->Western = 1;
-    }
-
-    if (strstr(textoGenero, "Documentary") != NULL) {
+    } else if (strcmp(nombreGenero, "Documentary") == 0) {
         g->Documentary = 1;
-    }
-
-    if (strstr(textoGenero, "Film-Noir") != NULL) {
+    } else if (strcmp(nombreGenero, "Film-Noir") == 0) {
         g->FilmNoir = 1;
     }
 }

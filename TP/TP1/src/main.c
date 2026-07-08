@@ -26,27 +26,22 @@ int main(void)
         printf("Error al leer movies1.dat\n");
         return 1;
     }
-
-    Punto1(peliculas, cantPeliculas, "data/ratings1.dat");
-
+    Punto1(peliculas, cantPeliculas, "data/ratings1.dat"); 
+    free(peliculas);
+    
     // -------------------------------------------------------------------------
     printf("\n========== PUNTO 2 ==========\n");
-
     Punto2 ("data/movies1.dat", "data/movies2.csv", "data/movies_final.dat");
-
+    
     peliculas = leerPeliculas("data/movies_final.dat", &cantPeliculas);
     if (peliculas == NULL) {
         printf("Error al leer movies_final.dat\n");
         return 1;
     }
-
     Punto1(peliculas, cantPeliculas, "data/ratings1.dat");
-
     // -------------------------------------------------------------------------
     printf("\n========== PUNTO 3 ==========\n");
-
     Punto3 (peliculas, cantPeliculas, "data/ratings1.dat");
-
     // -------------------------------------------------------------------------
     free(peliculas);
     return 0;

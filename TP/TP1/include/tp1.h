@@ -77,7 +77,6 @@ void limpiarGeneros(genero *g);
 
 void cargarGeneroDesdeTexto (genero *g, const char *textoGenero);
 
-int buscarUsuarioPorId (struct usuarioGeneros usuarios[], int cantUsuarios, int idUser);
 
 // ==================== FUNCIONES DE LOS PUNTOS ====================
 void Punto1 (struct movie peliculas[], int cantPeliculas,const char *archivoRatings);
