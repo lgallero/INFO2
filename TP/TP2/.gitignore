@@ -1,0 +1,15 @@
+# Objetos y ejecutables (NO se versionan)
+*.o
+*.obj
+/tp2
+*.exe
+
+# Basura de editores/SO
+*.swp
+.DS_Store
+
+# Temporales de Syncthing (se cuelan al compilar en una carpeta sincronizada)
+~syncthing~*
+*.tmp
+.stfolder/
+.stversions/
