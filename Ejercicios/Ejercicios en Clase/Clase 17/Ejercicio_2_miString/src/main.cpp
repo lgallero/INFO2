@@ -1,5 +1,6 @@
 #include <iostream>
 #include "miString.h"
+#include <cstring>
 
 int main ()
 {
@@ -35,6 +36,8 @@ int main ()
     std::cout << "\nTexto agregado a la cadena vacia: ";
     obj1.imprimir ();
     std::cout << "Longitud: " << obj1.getLongitud () << '\n';
+
+    miString *pStr = new
 
     return 0;                      // Se ejecuta automaticamente ~miString().
 }

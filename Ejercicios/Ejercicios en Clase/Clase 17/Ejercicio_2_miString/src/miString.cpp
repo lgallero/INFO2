@@ -1,5 +1,6 @@
 #include "miString.h"
 #include <iostream>
+#include <cstring>
 
 miString::miString (const char* cadena)
 {
@@ -50,20 +51,14 @@ int miString::getLongitud (void)
 
 void miString::agregar (const char* texto)
 {
-    int longitudTexto = 0;
-    while (texto[longitudTexto] != '\0')
-        longitudTexto++;
+    int longitudTexto = std::strlen (texto);
 
     int nuevaLongitud = m_longitud + longitudTexto;
     char* nuevaCadena = new char [nuevaLongitud + 1];
 
-    // Copiamos el texto viejo, sin su '\0'.
-    for (int i = 0; i < m_longitud; i++)
-        nuevaCadena[i] = m_cadena[i];
-
-    // Pegamos lo nuevo a continuacion. Este bucle copia tambien el '\0'.
-    for (int i = 0; i <= longitudTexto; i++)
-        nuevaCadena[m_longitud + i] = texto[i];
+    // Copiamos el texto viejo, incluido su '\0', para poder concatenar.
+    std::strcpy (nuevaCadena, m_cadena);
+    std::strcat (nuevaCadena, texto);
 
     // Recien ahora podemos liberar el bloque que contenia el texto viejo.
     delete[] m_cadena;
